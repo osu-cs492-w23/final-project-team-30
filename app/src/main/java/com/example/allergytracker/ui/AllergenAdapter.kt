@@ -8,11 +8,18 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.allergytracker.R
 import com.example.allergytracker.data.AllergenResult
+import com.example.allergytracker.data.FoodEntry
+import com.example.allergytracker.data.FoodResult
 
 class AllergenAdapter : RecyclerView.Adapter<AllergenAdapter.AllergenViewHolder>() {
-    val results: MutableList<AllergenResult> = mutableListOf()
+    var results: List<FoodResult> = mutableListOf()
 
     override fun getItemCount(): Int = results.size
+
+    fun updateResults(newResults: List<FoodResult>) {
+        results = newResults ?: listOf()
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllergenViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -27,9 +34,9 @@ class AllergenAdapter : RecyclerView.Adapter<AllergenAdapter.AllergenViewHolder>
 
     class AllergenViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val resultText: TextView = view.findViewById(R.id.tv_allergen_result)
-        private var currResult: AllergenResult? = null
+        private var currResult: FoodResult? = null
 
-        fun bind(result: AllergenResult) {
+        fun bind(result: FoodResult) {
             currResult = result
             resultText.text = result.name
         }
