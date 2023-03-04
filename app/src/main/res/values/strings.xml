@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Allergy Tracker</string>
+    <string name="allergen_search_hint">Enter a search query</string>
+    <string name="search_btn_hint">Search</string>
 </resources>
