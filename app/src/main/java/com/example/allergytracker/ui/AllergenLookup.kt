@@ -67,7 +67,7 @@ class AllergenLookup : AppCompatActivity() {
             }
         }
 
-        viewModel.loadingStatus.observe(this) {
+        viewModel.searchLoadingStatus.observe(this) {
             when (it) {
                 LoadingStatus.LOADING -> {
                     loadingIndicator.visibility = View.VISIBLE
@@ -87,19 +87,36 @@ class AllergenLookup : AppCompatActivity() {
             }
         }
 
+        viewModel.detailsLoadingStatus.observe(this) {
+            when (it) {
+                LoadingStatus.LOADING -> {
+                    loadingIndicator.visibility = View.VISIBLE
+                }
+                LoadingStatus.SUCCESS -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    searchItemDetails.visibility = View.VISIBLE
+                }
+                LoadingStatus.ERROR -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    searchErrorTV.visibility = View.VISIBLE
+                }
+            }
+        }
+
         viewModel.errorMessage.observe(this) {
             searchErrorTV.text = getString(R.string.search_error, it ?: "unknown error")
         }
     }
 
-    //private var lastClicked: FoodResult? = null
+    private var lastClicked: FoodResult? = null
     private fun onAllergenResultClick(result: FoodResult) {
-        /*if (result == lastClicked) {
+        if (result.foodId == lastClicked?.foodId) {
             searchItemDetails.visibility = View.INVISIBLE
             lastClicked = null
             return
-        }*/
+        }
 
         viewModel.loadAllergenDetails(APP_ID, APP_KEY, result)
+        lastClicked = result
     }
 }

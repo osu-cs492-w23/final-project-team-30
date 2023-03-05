@@ -17,20 +17,23 @@ class AllergenViewModel : ViewModel() {
     private val _foodDetails = MutableLiveData<FoodAllergenDetails?>(null)
     val foodDetails: LiveData<FoodAllergenDetails?> = _foodDetails
 
-    private val _loadingStatus = MutableLiveData<LoadingStatus>(LoadingStatus.SUCCESS)
-    val loadingStatus: LiveData<LoadingStatus> = _loadingStatus
+    private val _searchLoadingStatus = MutableLiveData(LoadingStatus.SUCCESS)
+    val searchLoadingStatus: LiveData<LoadingStatus> = _searchLoadingStatus
+
+    private val _detailsLoadingStatus = MutableLiveData(LoadingStatus.SUCCESS)
+    val detailsLoadingStatus: LiveData<LoadingStatus> = _detailsLoadingStatus
 
     private val _errorMessage = MutableLiveData<String?>(null)
     val errorMessage: LiveData<String?> = _errorMessage
 
     fun loadSearchResults(appId: String, appKey: String, ingredient: String) {
         viewModelScope.launch {
-            _loadingStatus.value = LoadingStatus.LOADING
+            _searchLoadingStatus.value = LoadingStatus.LOADING
 
             val result = repository.loadAllergenSearch(appId, appKey, ingredient)
             _searchResults.value = result.getOrNull()
 
-            _loadingStatus.value = when (result.isSuccess) {
+            _searchLoadingStatus.value = when (result.isSuccess) {
                 true -> LoadingStatus.SUCCESS
                 false -> LoadingStatus.ERROR
             }
@@ -42,13 +45,18 @@ class AllergenViewModel : ViewModel() {
 
     fun loadAllergenDetails(appId: String, appKey: String, foodResult: FoodResult) {
         viewModelScope.launch {
-            Log.d("Main", "Loading details for ${foodResult.name}")
+            _detailsLoadingStatus.value = LoadingStatus.LOADING
             val result = repository.loadFoodDetails(appId, appKey, foodResult)
-            Log.d("Main", "Retrieved values")
+
             _foodDetails.value = result.getOrNull()
 
+            _detailsLoadingStatus.value = when (result.isSuccess) {
+                true -> LoadingStatus.SUCCESS
+                false -> LoadingStatus.ERROR
+            }
+
             if (result.isFailure)
-                Log.e("Main", result.exceptionOrNull().toString())
+                _errorMessage.value = result.exceptionOrNull()?.message
         }
     }
 }
