@@ -22,7 +22,6 @@ const val APP_KEY: String = ""
 
 class AllergenLookup : AppCompatActivity() {
     private val allergenAdapter = AllergenAdapter(::onAllergenResultClick)
-
     private val viewModel: AllergenViewModel by viewModels()
 
     private lateinit var allergenListRV: RecyclerView
@@ -53,6 +52,19 @@ class AllergenLookup : AppCompatActivity() {
 
         viewModel.searchResults.observe(this) {
             allergenAdapter.updateResults(it ?: listOf())
+        }
+
+        viewModel.foodDetails.observe(this) {
+            Log.d("Main", "loaded details of ${it?.food?.get(0)?.parsed?.get(0)?.name ?: "n/a"}")
+            if (it != null) {
+                Log.d("Main", "loaded details of ${it.food[0].parsed[0].name}")
+                searchItemDetails.visibility = View.VISIBLE
+                findViewById<TextView>(R.id.tv_details_1).text = it.food[0].parsed[0].name
+                var test: String = ""
+                for (code in it.healthLabels)
+                    test += "$code "
+                findViewById<TextView>(R.id.tv_details_2).text = test
+            }
         }
 
         viewModel.loadingStatus.observe(this) {
@@ -88,8 +100,6 @@ class AllergenLookup : AppCompatActivity() {
             return
         }*/
 
-        searchItemDetails.visibility = View.VISIBLE
-        findViewById<TextView>(R.id.tv_details_1).text = result.name
-        findViewById<TextView>(R.id.tv_details_2).text = result.label
+        viewModel.loadAllergenDetails(APP_ID, APP_KEY, result)
     }
 }

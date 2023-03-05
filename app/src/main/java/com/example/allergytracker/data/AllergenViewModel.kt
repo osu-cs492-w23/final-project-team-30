@@ -1,5 +1,6 @@
 package com.example.allergytracker.data
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,9 @@ class AllergenViewModel : ViewModel() {
 
     private val _searchResults = MutableLiveData<List<FoodResult>?>(null)
     val searchResults: LiveData<List<FoodResult>?> = _searchResults
+
+    private val _foodDetails = MutableLiveData<FoodAllergenDetails?>(null)
+    val foodDetails: LiveData<FoodAllergenDetails?> = _foodDetails
 
     private val _loadingStatus = MutableLiveData<LoadingStatus>(LoadingStatus.SUCCESS)
     val loadingStatus: LiveData<LoadingStatus> = _loadingStatus
@@ -33,6 +37,18 @@ class AllergenViewModel : ViewModel() {
 
             if (result.isFailure)
                 _errorMessage.value = result.exceptionOrNull()?.message
+        }
+    }
+
+    fun loadAllergenDetails(appId: String, appKey: String, foodResult: FoodResult) {
+        viewModelScope.launch {
+            Log.d("Main", "Loading details for ${foodResult.name}")
+            val result = repository.loadFoodDetails(appId, appKey, foodResult)
+            Log.d("Main", "Retrieved values")
+            _foodDetails.value = result.getOrNull()
+
+            if (result.isFailure)
+                Log.e("Main", result.exceptionOrNull().toString())
         }
     }
 }

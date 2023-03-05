@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class AllergenResult(
     @Json(name="parsed") val topResult: List<FoodEntry>,
-    @Json(name="hints") val results: List<FoodEntry>
+    @Json(name="hints") val results: List<FoodEntry>?
 )
 
 /*
