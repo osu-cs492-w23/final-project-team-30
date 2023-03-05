@@ -1,15 +1,18 @@
 package com.example.allergytracker.ui
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.allergytracker.R
@@ -17,6 +20,8 @@ import com.example.allergytracker.data.AllergenViewModel
 import com.example.allergytracker.data.FoodResult
 import com.example.allergytracker.data.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.snackbar.Snackbar
+
 const val APP_ID: String = ""
 const val APP_KEY: String = ""
 
@@ -25,7 +30,6 @@ class AllergenLookup : AppCompatActivity() {
     private val viewModel: AllergenViewModel by viewModels()
 
     private lateinit var allergenListRV: RecyclerView
-    private lateinit var searchErrorTV: TextView
     private lateinit var loadingIndicator: CircularProgressIndicator
     private lateinit var searchItemDetails: ConstraintLayout
 
@@ -33,7 +37,6 @@ class AllergenLookup : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_allergen_lookup)
 
-        searchErrorTV = findViewById(R.id.tv_search_error)
         loadingIndicator = findViewById(R.id.loading_indicator)
         searchItemDetails = findViewById(R.id.allergen_details_frame)
 
@@ -43,11 +46,19 @@ class AllergenLookup : AppCompatActivity() {
         allergenListRV.adapter = allergenAdapter
 
         val searchET: EditText = findViewById(R.id.et_search_query)
-        findViewById<Button>(R.id.btn_search).setOnClickListener {
+        // From https://stackoverflow.com/questions/1109022/how-to-close-hide-the-android-soft-keyboard-programmatically
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        fun attemptSearch() {
             val query = searchET.text.toString()
 
-            if (!TextUtils.isEmpty(query))
+            if (!TextUtils.isEmpty(query)) {
                 viewModel.loadSearchResults(APP_ID, APP_KEY, query)
+                imm?.hideSoftInputFromWindow(this.currentFocus?.windowToken, 0)
+            }
+        }
+
+        findViewById<Button>(R.id.btn_search).setOnClickListener {
+            attemptSearch()
         }
 
         viewModel.searchResults.observe(this) {
@@ -55,9 +66,7 @@ class AllergenLookup : AppCompatActivity() {
         }
 
         viewModel.foodDetails.observe(this) {
-            Log.d("Main", "loaded details of ${it?.food?.get(0)?.parsed?.get(0)?.name ?: "n/a"}")
             if (it != null) {
-                Log.d("Main", "loaded details of ${it.food[0].parsed[0].name}")
                 searchItemDetails.visibility = View.VISIBLE
                 findViewById<TextView>(R.id.tv_details_1).text = it.food[0].parsed[0].name
                 var test: String = ""
@@ -72,7 +81,6 @@ class AllergenLookup : AppCompatActivity() {
                 LoadingStatus.LOADING -> {
                     loadingIndicator.visibility = View.VISIBLE
                     allergenListRV.visibility = View.INVISIBLE
-                    searchErrorTV.visibility = View.INVISIBLE
                     searchItemDetails.visibility = View.INVISIBLE
                 }
                 LoadingStatus.SUCCESS -> {
@@ -82,7 +90,6 @@ class AllergenLookup : AppCompatActivity() {
                 }
                 LoadingStatus.ERROR -> {
                     loadingIndicator.visibility = View.INVISIBLE
-                    searchErrorTV.visibility = View.VISIBLE
                 }
             }
         }
@@ -98,13 +105,24 @@ class AllergenLookup : AppCompatActivity() {
                 }
                 LoadingStatus.ERROR -> {
                     loadingIndicator.visibility = View.INVISIBLE
-                    searchErrorTV.visibility = View.VISIBLE
                 }
             }
         }
 
+        val coordinatorLayout: CoordinatorLayout = findViewById(R.id.lookup_coordinator_layout)
         viewModel.errorMessage.observe(this) {
-            searchErrorTV.text = getString(R.string.search_error, it ?: "unknown error")
+            if (it != null) {
+                val sb = Snackbar.make(
+                    coordinatorLayout,
+                    getString(R.string.search_error, it),
+                    Snackbar.LENGTH_LONG
+                )
+                /*sb.setAction("RETRY") {
+                    attemptSearch()
+                    sb.dismiss()
+                }*/
+                sb.show()
+            }
         }
     }
 

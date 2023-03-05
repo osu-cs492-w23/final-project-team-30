@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lookup_coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -28,16 +33,6 @@
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/btn_search"
         app:layout_constraintBottom_toTopOf="@id/allergen_details_frame" >
-
-        <TextView
-            android:id="@+id/tv_search_error"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/search_btn_hint"
-            android:textAppearance="?attr/textAppearanceBody1"
-            android:textColor="?attr/colorError"
-            android:visibility="invisible" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/loading_indicator"
@@ -79,3 +74,5 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+    W
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

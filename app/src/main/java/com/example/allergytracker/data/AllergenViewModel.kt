@@ -39,7 +39,7 @@ class AllergenViewModel : ViewModel() {
             }
 
             if (result.isFailure)
-                _errorMessage.value = result.exceptionOrNull()?.message
+                _errorMessage.value = result.exceptionOrNull()?.message ?: "unknown error"
         }
     }
 
@@ -56,7 +56,7 @@ class AllergenViewModel : ViewModel() {
             }
 
             if (result.isFailure)
-                _errorMessage.value = result.exceptionOrNull()?.message
+                _errorMessage.value = result.exceptionOrNull()?.message ?: "unknown error"
         }
     }
 }
