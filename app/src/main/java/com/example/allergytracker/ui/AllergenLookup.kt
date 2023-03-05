@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.allergytracker.R
@@ -24,11 +25,12 @@ const val APP_KEY: String = ""
 
 class AllergenLookup : AppCompatActivity() {
     private val allergenLookupService = AllergenLookupService.create()
-    private val allergenAdapter = AllergenAdapter()
+    private val allergenAdapter = AllergenAdapter(::onAllergenResultClick)
 
     private lateinit var allergenListRV: RecyclerView
     private lateinit var searchErrorTV: TextView
     private lateinit var loadingIndicator: CircularProgressIndicator
+    private lateinit var searchItemDetails: ConstraintLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,7 @@ class AllergenLookup : AppCompatActivity() {
 
         searchErrorTV = findViewById(R.id.tv_search_error)
         loadingIndicator = findViewById(R.id.loading_indicator)
+        searchItemDetails = findViewById(R.id.allergen_details_frame)
 
         allergenListRV = findViewById(R.id.rv_allergen_list)
         allergenListRV.layoutManager = LinearLayoutManager(this)
@@ -49,10 +52,24 @@ class AllergenLookup : AppCompatActivity() {
                 loadingIndicator.visibility = View.VISIBLE
                 allergenListRV.visibility = View.INVISIBLE
                 searchErrorTV.visibility = View.INVISIBLE
+                searchItemDetails.visibility = View.INVISIBLE
                 doAllergenLookup(query)
                 searchET.setText("")
             }
         }
+    }
+
+    private var lastClicked: FoodResult? = null
+    private fun onAllergenResultClick(result: FoodResult) {
+        if (result == lastClicked) {
+            searchItemDetails.visibility = View.INVISIBLE
+            lastClicked = null
+            return
+        }
+
+        searchItemDetails.visibility = View.VISIBLE
+        findViewById<TextView>(R.id.tv_details_1).text = result.name
+        findViewById<TextView>(R.id.tv_details_2).text = result.label
     }
 
     private fun doAllergenLookup(ingredient: String) {
