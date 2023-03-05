@@ -17,6 +17,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "EDAMAM_APP_ID", EDAMAM_APP_ID)
+        buildConfigField("String", "EDAMAM_APP_KEY", EDAMAM_APP_KEY)
     }
 
     buildTypes {

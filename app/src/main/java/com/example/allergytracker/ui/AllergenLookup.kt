@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.allergytracker.BuildConfig
 import com.example.allergytracker.R
 import com.example.allergytracker.data.AllergenViewModel
 import com.example.allergytracker.data.FoodResult
@@ -23,9 +24,6 @@ import com.example.allergytracker.data.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import org.w3c.dom.Text
-
-const val APP_ID: String = ""
-const val APP_KEY: String = ""
 
 class AllergenLookup : AppCompatActivity() {
     private val allergenAdapter = AllergenAdapter(::onAllergenResultClick)
@@ -54,7 +52,7 @@ class AllergenLookup : AppCompatActivity() {
             val query = searchET.text.toString()
 
             if (!TextUtils.isEmpty(query)) {
-                viewModel.loadSearchResults(APP_ID, APP_KEY, query)
+                viewModel.loadSearchResults(BuildConfig.EDAMAM_APP_ID, BuildConfig.EDAMAM_APP_KEY, query)
                 imm?.hideSoftInputFromWindow(this.currentFocus?.windowToken, 0)
             }
         }
@@ -149,7 +147,7 @@ class AllergenLookup : AppCompatActivity() {
             return
         }
 
-        viewModel.loadAllergenDetails(APP_ID, APP_KEY, result)
+        viewModel.loadAllergenDetails(BuildConfig.EDAMAM_APP_ID, BuildConfig.EDAMAM_APP_KEY, result)
         lastClicked = result
     }
 }
