@@ -8,24 +8,22 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.allergytracker.R
-import com.example.allergytracker.api.AllergenLookupService
-import com.example.allergytracker.data.AllergenResult
+import com.example.allergytracker.data.AllergenViewModel
 import com.example.allergytracker.data.FoodResult
+import com.example.allergytracker.data.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
 const val APP_ID: String = ""
 const val APP_KEY: String = ""
 
 class AllergenLookup : AppCompatActivity() {
-    private val allergenLookupService = AllergenLookupService.create()
     private val allergenAdapter = AllergenAdapter(::onAllergenResultClick)
+
+    private val viewModel: AllergenViewModel by viewModels()
 
     private lateinit var allergenListRV: RecyclerView
     private lateinit var searchErrorTV: TextView
@@ -48,69 +46,50 @@ class AllergenLookup : AppCompatActivity() {
         val searchET: EditText = findViewById(R.id.et_search_query)
         findViewById<Button>(R.id.btn_search).setOnClickListener {
             val query = searchET.text.toString()
-            if (!TextUtils.isEmpty(query)) {
-                loadingIndicator.visibility = View.VISIBLE
-                allergenListRV.visibility = View.INVISIBLE
-                searchErrorTV.visibility = View.INVISIBLE
-                searchItemDetails.visibility = View.INVISIBLE
-                doAllergenLookup(query)
-                searchET.setText("")
+
+            if (!TextUtils.isEmpty(query))
+                viewModel.loadSearchResults(APP_ID, APP_KEY, query)
+        }
+
+        viewModel.searchResults.observe(this) {
+            allergenAdapter.updateResults(it ?: listOf())
+        }
+
+        viewModel.loadingStatus.observe(this) {
+            when (it) {
+                LoadingStatus.LOADING -> {
+                    loadingIndicator.visibility = View.VISIBLE
+                    allergenListRV.visibility = View.INVISIBLE
+                    searchErrorTV.visibility = View.INVISIBLE
+                    searchItemDetails.visibility = View.INVISIBLE
+                }
+                LoadingStatus.SUCCESS -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    allergenListRV.visibility = View.VISIBLE
+                    searchET.setText("")
+                }
+                LoadingStatus.ERROR -> {
+                    loadingIndicator.visibility = View.INVISIBLE
+                    searchErrorTV.visibility = View.VISIBLE
+                }
             }
+        }
+
+        viewModel.errorMessage.observe(this) {
+            searchErrorTV.text = getString(R.string.search_error, it ?: "unknown error")
         }
     }
 
-    private var lastClicked: FoodResult? = null
+    //private var lastClicked: FoodResult? = null
     private fun onAllergenResultClick(result: FoodResult) {
-        if (result == lastClicked) {
+        /*if (result == lastClicked) {
             searchItemDetails.visibility = View.INVISIBLE
             lastClicked = null
             return
-        }
+        }*/
 
         searchItemDetails.visibility = View.VISIBLE
         findViewById<TextView>(R.id.tv_details_1).text = result.name
         findViewById<TextView>(R.id.tv_details_2).text = result.label
-    }
-
-    private fun doAllergenLookup(ingredient: String) {
-        allergenLookupService.searchFood(APP_ID, APP_KEY, ingredient)
-            .enqueue(object : Callback<AllergenResult> {
-                override fun onResponse(call: Call<AllergenResult>, response: Response<AllergenResult>) {
-                    loadingIndicator.visibility = View.INVISIBLE
-
-                    if (response.isSuccessful) {
-                        allergenListRV.visibility = View.VISIBLE
-                        val results: MutableList<FoodResult> = mutableListOf()
-
-                        if (response.body() != null) {
-                            if (response.body()?.topResult?.isNotEmpty() == true)
-                                results.add(response.body()!!.topResult[0].data)
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                for (entry in response.body()!!.results) {
-                                    results.add(entry.data)
-                                }
-                            }
-
-                            allergenAdapter.updateResults(results)
-                        }
-                    }
-                    else {
-                        searchErrorTV.visibility = View.VISIBLE
-                        searchErrorTV.text = getString(
-                            R.string.search_error,
-                            response.errorBody()?.string() ?: "unknown error"
-                        )
-                    }
-                }
-
-                override fun onFailure(call: Call<AllergenResult>, t: Throwable) {
-                    loadingIndicator.visibility = View.INVISIBLE
-                    searchErrorTV.visibility = View.VISIBLE
-                    searchErrorTV.text = getString(
-                        R.string.search_error,
-                        t.message
-                    )
-                }
-            })
     }
 }
