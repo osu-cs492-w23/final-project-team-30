@@ -20,7 +20,7 @@ class AllergenViewModel : ViewModel() {
     private val _searchLoadingStatus = MutableLiveData(LoadingStatus.SUCCESS)
     val searchLoadingStatus: LiveData<LoadingStatus> = _searchLoadingStatus
 
-    private val _detailsLoadingStatus = MutableLiveData(LoadingStatus.SUCCESS)
+    private val _detailsLoadingStatus = MutableLiveData(LoadingStatus.ERROR)
     val detailsLoadingStatus: LiveData<LoadingStatus> = _detailsLoadingStatus
 
     private val _errorMessage = MutableLiveData<String?>(null)

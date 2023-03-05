@@ -18,9 +18,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.allergytracker.R
 import com.example.allergytracker.data.AllergenViewModel
 import com.example.allergytracker.data.FoodResult
+import com.example.allergytracker.data.HealthCodeConstants
 import com.example.allergytracker.data.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
+import org.w3c.dom.Text
 
 const val APP_ID: String = ""
 const val APP_KEY: String = ""
@@ -65,14 +67,27 @@ class AllergenLookup : AppCompatActivity() {
             allergenAdapter.updateResults(it ?: listOf())
         }
 
+        val allergenDetailsFoodName: TextView = findViewById(R.id.tv_food_name)
+        val allergenDetails: TextView = findViewById(R.id.tv_food_allergens)
+        val allergenKosher: TextView = findViewById(R.id.tv_kosher)
+        val allergenVegetarian: TextView = findViewById(R.id.tv_vegetarian)
+        val allergenVegan: TextView = findViewById(R.id.tv_vegan)
+        val allergenPescatarian: TextView = findViewById(R.id.tv_pescatarian)
         viewModel.foodDetails.observe(this) {
             if (it != null) {
                 searchItemDetails.visibility = View.VISIBLE
-                findViewById<TextView>(R.id.tv_details_1).text = it.food[0].parsed[0].name
-                var test: String = ""
-                for (code in it.healthLabels)
-                    test += "$code "
-                findViewById<TextView>(R.id.tv_details_2).text = test
+                Log.d("Main", "Showing details")
+                allergenDetailsFoodName.text = it.food[0].parsed[0].name
+
+                val healthInfo = HealthCodeConstants.readHealthInfo(it)
+
+                allergenDetails.text = healthInfo.allergens.joinToString(", ")
+
+                allergenKosher.visibility = if (healthInfo.kosher) View.VISIBLE else View.INVISIBLE
+                allergenVegetarian.visibility = if (healthInfo.vegetarian) View.VISIBLE else View.INVISIBLE
+                allergenVegan.visibility = if (healthInfo.vegan) View.VISIBLE else View.INVISIBLE
+                allergenPescatarian.visibility = if (healthInfo.pescatarian) View.VISIBLE else View.INVISIBLE
+
             }
         }
 

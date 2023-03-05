@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lookup_coordinator_layout"
     android:layout_width="match_parent"
@@ -8,7 +9,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.AllergenLookup"
     android:orientation="vertical">
 
@@ -57,22 +57,66 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="invisible">
+        android:visibility="invisible" >
 
         <TextView
-            android:id="@+id/tv_details_1"
-            android:layout_width="match_parent"
+            android:id="@+id/tv_food_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/barrier_diet"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/tv_details_2"
-            android:layout_width="match_parent"
+            android:id="@+id/tv_food_allergens"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_details_1" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/barrier_diet"
+            app:layout_constraintTop_toBottomOf="@id/tv_food_name"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_kosher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/tv_vegetarian"
+            android:layout_marginRight="6dp"
+            android:text="@string/allergen_details_kosher" />
+        <TextView
+            android:id="@+id/tv_vegetarian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="@string/allergen_details_vegetarian" />
+        <TextView
+            android:id="@+id/tv_pescatarian"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_kosher"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="@string/allergen_details_pescatarian" />
+        <TextView
+            android:id="@+id/tv_vegan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_kosher"
+            app:layout_constraintRight_toLeftOf="@id/tv_pescatarian"
+            android:layout_marginRight="6dp"
+            android:text="@string/allergen_details_vegan" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_diet"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="tv_kosher,tv_pescatarian,tv_vegan,tv_vegetarian" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-    W
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
