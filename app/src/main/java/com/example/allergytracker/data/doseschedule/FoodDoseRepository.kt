@@ -1,4 +1,4 @@
-package com.example.allergytracker.data.settings
+package com.example.allergytracker.data.doseschedule
 
 class FoodDoseRepository(
     private val dao: FoodDoseDao

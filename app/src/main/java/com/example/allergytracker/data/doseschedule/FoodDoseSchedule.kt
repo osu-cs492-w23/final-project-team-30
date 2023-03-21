@@ -1,9 +1,7 @@
-package com.example.allergytracker.data.settings
+package com.example.allergytracker.data.doseschedule
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.example.allergytracker.data.Measurement
-import java.math.BigInteger
 
 @Entity(primaryKeys = ["foodId", "startDate"])
 data class FoodDoseSchedule(

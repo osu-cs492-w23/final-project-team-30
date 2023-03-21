@@ -17,13 +17,13 @@
             android:id="@+id/navigate_to_allergen_lookup"
             app:destination="@id/allergen_lookup" />
         <action
-            android:id="@+id/navigate_to_settings"
-            app:destination="@id/settings" />
+            android:id="@+id/navigate_to_dose_schedule"
+            app:destination="@id/dose_schedule" />
     </fragment>
 
     <fragment
-        android:id="@+id/settings"
-        android:name="com.example.allergytracker.ui.SettingsFragment"
-        android:label="@string/label_settings" />
+        android:id="@+id/dose_schedule"
+        android:name="com.example.allergytracker.ui.DoseScheduleFragment"
+        android:label="@string/label_dose_schedule" />
 
 </navigation>

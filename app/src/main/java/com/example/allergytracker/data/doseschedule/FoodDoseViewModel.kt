@@ -1,4 +1,4 @@
-package com.example.allergytracker.data.settings
+package com.example.allergytracker.data.doseschedule
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

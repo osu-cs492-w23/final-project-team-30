@@ -1,4 +1,4 @@
-package com.example.allergytracker.data.settings
+package com.example.allergytracker.data.doseschedule
 
 import androidx.room.Dao
 import androidx.room.Delete
