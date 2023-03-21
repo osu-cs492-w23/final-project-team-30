@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/calendar" >
+
+    <fragment
+        android:id="@+id/allergen_lookup"
+        android:name="com.example.allergytracker.ui.AllergenLookupFragment"
+        android:label="@string/label_allergen_lookup" />
+
+    <fragment
+        android:id="@+id/calendar"
+        android:name="com.example.allergytracker.ui.CalendarFragment"
+        android:label="@string/label_calendar">
+        <action
+            android:id="@+id/navigate_to_allergen_lookup"
+            app:destination="@id/allergen_lookup" />
+        <action
+            android:id="@+id/navigate_to_settings"
+            app:destination="@id/settings" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settings"
+        android:name="com.example.allergytracker.ui.SettingsFragment"
+        android:label="@string/label_settings" />
+
+</navigation>

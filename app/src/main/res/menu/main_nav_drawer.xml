@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/allergen_lookup"
+        android:icon="@drawable/ic_action_lookup"
+        android:title="@string/label_allergen_lookup" />
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/label_settings" />
+</menu>

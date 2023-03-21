@@ -2,11 +2,11 @@ package com.example.allergytracker.ui
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -16,6 +16,8 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.allergytracker.BuildConfig
@@ -27,7 +29,7 @@ import com.example.allergytracker.data.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 
-class AllergenLookup : AppCompatActivity() {
+class AllergenLookupFragment : Fragment(R.layout.allergen_lookup_fragment) {
     private val allergenAdapter = AllergenAdapter(::onAllergenResultClick)
     private val viewModel: AllergenViewModel by viewModels()
 
@@ -35,45 +37,45 @@ class AllergenLookup : AppCompatActivity() {
     private lateinit var loadingIndicator: CircularProgressIndicator
     private lateinit var searchItemDetails: ConstraintLayout
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_allergen_lookup)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
-        loadingIndicator = findViewById(R.id.loading_indicator)
-        searchItemDetails = findViewById(R.id.allergen_details_frame)
+        loadingIndicator = view.findViewById(R.id.loading_indicator)
+        searchItemDetails = view.findViewById(R.id.allergen_details_frame)
 
-        allergenListRV = findViewById(R.id.rv_allergen_list)
-        allergenListRV.layoutManager = LinearLayoutManager(this)
+        allergenListRV = view.findViewById(R.id.rv_allergen_list)
+        allergenListRV.layoutManager = LinearLayoutManager(requireContext())
         allergenListRV.setHasFixedSize(true)
         allergenListRV.adapter = allergenAdapter
 
-        val searchET: EditText = findViewById(R.id.et_search_query)
+        val searchET: EditText = view.findViewById(R.id.et_search_query)
         // From https://stackoverflow.com/questions/1109022/how-to-close-hide-the-android-soft-keyboard-programmatically
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         fun attemptSearch() {
             val query = searchET.text.toString()
 
             if (!TextUtils.isEmpty(query)) {
                 viewModel.loadSearchResults(BuildConfig.EDAMAM_APP_ID, BuildConfig.EDAMAM_APP_KEY, query)
-                imm?.hideSoftInputFromWindow(this.currentFocus?.windowToken, 0)
+                imm?.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }
 
-        findViewById<Button>(R.id.btn_search).setOnClickListener {
+        view.findViewById<Button>(R.id.btn_search).setOnClickListener {
             attemptSearch()
         }
 
-        viewModel.searchResults.observe(this) {
+        viewModel.searchResults.observe(viewLifecycleOwner) {
             allergenAdapter.updateResults(it ?: listOf())
         }
 
-        val allergenDetailsFoodName: TextView = findViewById(R.id.tv_food_name)
-        val allergenDetails: TextView = findViewById(R.id.tv_food_allergens)
-        val allergenKosher: TextView = findViewById(R.id.tv_kosher)
-        val allergenVegetarian: TextView = findViewById(R.id.tv_vegetarian)
-        val allergenVegan: TextView = findViewById(R.id.tv_vegan)
-        val allergenPescatarian: TextView = findViewById(R.id.tv_pescatarian)
-        viewModel.foodDetails.observe(this) {
+        val allergenDetailsFoodName: TextView = view.findViewById(R.id.tv_food_name)
+        val allergenDetails: TextView = view.findViewById(R.id.tv_food_allergens)
+        val allergenKosher: TextView = view.findViewById(R.id.tv_kosher)
+        val allergenVegetarian: TextView = view.findViewById(R.id.tv_vegetarian)
+        val allergenVegan: TextView = view.findViewById(R.id.tv_vegan)
+        val allergenPescatarian: TextView = view.findViewById(R.id.tv_pescatarian)
+        viewModel.foodDetails.observe(viewLifecycleOwner) {
             if (it != null) {
                 searchItemDetails.visibility = View.VISIBLE
                 Log.d("Main", "Showing details")
@@ -91,7 +93,7 @@ class AllergenLookup : AppCompatActivity() {
             }
         }
 
-        viewModel.searchLoadingStatus.observe(this) {
+        viewModel.searchLoadingStatus.observe(viewLifecycleOwner) {
             when (it) {
                 LoadingStatus.LOADING -> {
                     loadingIndicator.visibility = View.VISIBLE
@@ -109,7 +111,7 @@ class AllergenLookup : AppCompatActivity() {
             }
         }
 
-        viewModel.detailsLoadingStatus.observe(this) {
+        viewModel.detailsLoadingStatus.observe(viewLifecycleOwner) {
             when (it) {
                 LoadingStatus.LOADING -> {
                     loadingIndicator.visibility = View.VISIBLE
@@ -124,7 +126,7 @@ class AllergenLookup : AppCompatActivity() {
             }
         }
 
-        val coordinatorLayout: CoordinatorLayout = findViewById(R.id.lookup_coordinator_layout)
+        val coordinatorLayout: CoordinatorLayout = view.findViewById(R.id.lookup_coordinator_layout)
         viewModel.errorMessage.observe(this) {
             if (it != null) {
                 val sb = Snackbar.make(
@@ -153,9 +155,8 @@ class AllergenLookup : AppCompatActivity() {
         lastClicked = result
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.activity_allergen_lookup_bar, menu)
-        return true
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.activity_allergen_lookup_bar, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
