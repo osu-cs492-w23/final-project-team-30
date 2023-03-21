@@ -4,13 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.allergytracker.R
-import com.example.allergytracker.data.AllergenResult
-import com.example.allergytracker.data.FoodEntry
-import com.example.allergytracker.data.FoodResult
+import com.example.allergytracker.data.allergenlookup.FoodResult
 
 class AllergenAdapter(private val onClick: (FoodResult) -> Unit) : RecyclerView.Adapter<AllergenAdapter.AllergenViewHolder>() {
     var results: List<FoodResult> = mutableListOf()

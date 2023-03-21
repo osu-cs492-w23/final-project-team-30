@@ -1,8 +1,8 @@
 package com.example.allergytracker.api
 
-import com.example.allergytracker.data.AllergenResult
-import com.example.allergytracker.data.FoodAllergenDetails
-import com.example.allergytracker.data.NutrientsPostBody
+import com.example.allergytracker.data.allergenlookup.AllergenResult
+import com.example.allergytracker.data.allergenlookup.FoodAllergenDetails
+import com.example.allergytracker.data.allergenlookup.NutrientsPostBody
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory

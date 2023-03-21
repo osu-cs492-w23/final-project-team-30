@@ -1,4 +1,4 @@
-package com.example.allergytracker.data
+package com.example.allergytracker.data.allergenlookup
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

@@ -13,7 +13,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
@@ -22,10 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.allergytracker.BuildConfig
 import com.example.allergytracker.R
-import com.example.allergytracker.data.AllergenViewModel
-import com.example.allergytracker.data.FoodResult
-import com.example.allergytracker.data.HealthCodeConstants
-import com.example.allergytracker.data.LoadingStatus
+import com.example.allergytracker.data.allergenlookup.AllergenViewModel
+import com.example.allergytracker.data.allergenlookup.FoodResult
+import com.example.allergytracker.data.allergenlookup.HealthCodeConstants
+import com.example.allergytracker.data.allergenlookup.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 

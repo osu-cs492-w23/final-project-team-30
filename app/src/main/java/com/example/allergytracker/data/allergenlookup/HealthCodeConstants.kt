@@ -1,6 +1,4 @@
-package com.example.allergytracker.data
-
-import android.util.Log
+package com.example.allergytracker.data.allergenlookup
 
 // https://developer.edamam.com/food-database-api-docs#/
 object HealthCodeConstants {

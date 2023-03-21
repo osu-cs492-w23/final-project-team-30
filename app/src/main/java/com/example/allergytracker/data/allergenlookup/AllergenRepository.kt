@@ -1,6 +1,5 @@
-package com.example.allergytracker.data
+package com.example.allergytracker.data.allergenlookup
 
-import android.util.Log
 import com.example.allergytracker.api.AllergenLookupService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
