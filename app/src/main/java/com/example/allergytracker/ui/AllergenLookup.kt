@@ -1,10 +1,13 @@
 package com.example.allergytracker.ui
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -23,7 +26,6 @@ import com.example.allergytracker.data.HealthCodeConstants
 import com.example.allergytracker.data.LoadingStatus
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
-import org.w3c.dom.Text
 
 class AllergenLookup : AppCompatActivity() {
     private val allergenAdapter = AllergenAdapter(::onAllergenResultClick)
@@ -149,5 +151,38 @@ class AllergenLookup : AppCompatActivity() {
 
         viewModel.loadAllergenDetails(BuildConfig.EDAMAM_APP_ID, BuildConfig.EDAMAM_APP_KEY, result)
         lastClicked = result
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_allergen_lookup_bar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_share -> {
+                shareResult()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun shareResult() {
+        if (lastClicked != null && viewModel.foodDetails.value != null) {
+
+            val healthInfo = HealthCodeConstants.readHealthInfo(viewModel.foodDetails.value!!)
+
+            val text = getString(R.string.share_text,
+                lastClicked!!.name,
+                healthInfo.allergens.joinToString(", "))
+
+            val intent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, text)
+                type = "text/plain"
+            }
+            startActivity(Intent.createChooser(intent, null))
+        }
     }
 }

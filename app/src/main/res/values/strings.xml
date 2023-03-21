@@ -4,8 +4,12 @@
     <string name="allergen_search_hint">Enter a search query</string>
     <string name="search_btn_hint">Search</string>
     <string name="search_error">Error fetching search results: %1$s</string>
+
     <string name="allergen_details_kosher">Kosher</string>
     <string name="allergen_details_vegetarian">Vegetarian</string>
     <string name="allergen_details_vegan">Vegan</string>
     <string name="allergen_details_pescatarian">Pescatarian</string>
+
+    <string name="action_share">Share</string>
+    <string name="share_text">%1$s: Contains %2$s</string>
 </resources>
