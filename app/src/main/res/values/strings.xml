@@ -23,4 +23,7 @@
     <string name="label_cancel_edit_schedule">Discard changes</string>
     <string name="label_save_schedule">Save changes</string>
     <string name="dose_schedule_title_hint">Enter Dosage Name</string>
+    <string name="hint_dose_amount">Enter a dose amount</string>
+    <string name="hint_dose_freq">Enter dose frequency</string>
+    <string name="label_add_dose_entry">Add new dose</string>
 </resources>

@@ -1,14 +1,11 @@
 package com.example.allergytracker.data.doseschedule
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FoodDoseDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDose(foodDose: FoodDose)
     @Delete
     suspend fun deleteDose(foodDose: FoodDose)
@@ -16,11 +13,11 @@ interface FoodDoseDao {
     @Query("SELECT * FROM FoodDose")
     fun getFoodDoses() : Flow<List<FoodDose>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDoseSchedule(foodDoseSchedule: FoodDoseSchedule)
     @Delete
     suspend fun deleteDoseSchedule(foodDoseSchedule: FoodDoseSchedule)
 
     @Query("SELECT * FROM FoodDoseSchedule WHERE foodId = :foodId")
-    fun getFoodDoseSchedules(foodId: Int) : Flow<List<FoodDoseSchedule>>
+    fun getFoodDoseSchedules(foodId: Long) : Flow<List<FoodDoseSchedule>>
 }

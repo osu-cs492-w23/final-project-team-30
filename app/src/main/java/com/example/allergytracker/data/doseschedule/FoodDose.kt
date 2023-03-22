@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class FoodDose(
-    @PrimaryKey(true) val id: Int = 0,
+    @PrimaryKey(true) val id: Long = 0,
     var name: String,
     var isIndefinite: Boolean
 ) : java.io.Serializable

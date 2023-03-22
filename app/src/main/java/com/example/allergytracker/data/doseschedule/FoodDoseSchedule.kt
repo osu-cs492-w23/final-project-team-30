@@ -1,15 +1,17 @@
 package com.example.allergytracker.data.doseschedule
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.allergytracker.data.Measurement
 
-@Entity(primaryKeys = ["foodId", "startDay"])
+@Entity()
 data class FoodDoseSchedule(
-    val foodId: Int,
-    val startDay: Int,
-    val startMonth: Int,
-    val startYear: Int,
-    val amount: Int,
-    val unit: Measurement,
-    val frequency: Int
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    var foodId: Long,
+    var startDay: Int,
+    var startMonth: Int,
+    var startYear: Int,
+    var amount: String,
+    var unit: Measurement,
+    var frequency: String
 ) : java.io.Serializable

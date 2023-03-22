@@ -12,4 +12,72 @@
         android:hint="@string/dose_schedule_title_hint"
         android:textSize="22sp" />
 
+    <Button
+        android:id="@+id/btn_add_dose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/dose_schedule_name"
+        android:layout_marginHorizontal="20dp"
+        android:hint="@string/label_add_dose_entry"
+        android:visibility="invisible" />
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_add_dose"
+        app:layout_constraintBottom_toTopOf="@id/dose_start_cal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" >
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/loading_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_marginTop="32dp"
+            android:layout_gravity="top|center_horizontal"
+            android:visibility="invisible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_dose_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+    <DatePicker
+        android:id="@+id/dose_start_cal"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:datePickerMode="spinner"
+        android:calendarViewShown="false"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/et_dose_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toRightOf="@id/dose_start_cal"
+        app:layout_constraintTop_toBottomOf="@id/frame_layout"
+        android:hint="@string/hint_dose_amount"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/et_dose_freq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toRightOf="@id/dose_start_cal"
+        app:layout_constraintTop_toBottomOf="@id/et_dose_amount"
+        android:hint="@string/hint_dose_freq"
+        android:visibility="invisible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
