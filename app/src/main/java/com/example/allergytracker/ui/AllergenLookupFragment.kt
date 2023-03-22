@@ -77,7 +77,6 @@ class AllergenLookupFragment : Fragment(R.layout.allergen_lookup_fragment) {
         viewModel.foodDetails.observe(viewLifecycleOwner) {
             if (it != null) {
                 searchItemDetails.visibility = View.VISIBLE
-                Log.d("Main", "Showing details")
                 allergenDetailsFoodName.text = it.food[0].parsed[0].name
 
                 val healthInfo = HealthCodeConstants.readHealthInfo(it)
@@ -88,7 +87,6 @@ class AllergenLookupFragment : Fragment(R.layout.allergen_lookup_fragment) {
                 allergenVegetarian.visibility = if (healthInfo.vegetarian) View.VISIBLE else View.INVISIBLE
                 allergenVegan.visibility = if (healthInfo.vegan) View.VISIBLE else View.INVISIBLE
                 allergenPescatarian.visibility = if (healthInfo.pescatarian) View.VISIBLE else View.INVISIBLE
-
             }
         }
 

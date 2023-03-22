@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_edit_schedule"
+        android:icon="@drawable/ic_action_edit_schedule"
+        android:title="@string/label_edit_dose_schedule"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_delete_schedule"
+        android:icon="@drawable/ic_action_delete_schedule"
+        android:title="@string/label_delete_dose_schedule"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_cancel_edit_schedule"
+        android:icon="@drawable/ic_action_cancel_edit_schedule"
+        android:title="@string/label_cancel_edit_schedule"
+        app:showAsAction="always"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/action_save_schedule"
+        android:icon="@drawable/ic_action_save_schedule"
+        android:title="@string/label_save_schedule"
+        app:showAsAction="always"
+        android:visible="false" />
+</menu>

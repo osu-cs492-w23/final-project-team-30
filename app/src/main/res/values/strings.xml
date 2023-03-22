@@ -16,4 +16,11 @@
     <string name="label_allergen_lookup">Allergen Lookup</string>
     <string name="label_calendar">Calendar</string>
     <string name="label_dose_schedule">Dose Schedules</string>
+    <string name="label_add_dose_schedule">Add Dosage Schedule</string>
+    <string name="label_dose_schedule_details">Dosage Schedule</string>
+    <string name="label_edit_dose_schedule">Edit Dosage Schedule</string>
+    <string name="label_delete_dose_schedule">Delete Dosage Schedule</string>
+    <string name="label_cancel_edit_schedule">Discard changes</string>
+    <string name="label_save_schedule">Save changes</string>
+    <string name="dose_schedule_title_hint">Enter Dosage Name</string>
 </resources>

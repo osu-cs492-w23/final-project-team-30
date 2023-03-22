@@ -24,6 +24,23 @@
     <fragment
         android:id="@+id/dose_schedule"
         android:name="com.example.allergytracker.ui.DoseScheduleFragment"
-        android:label="@string/label_dose_schedule" />
+        android:label="@string/label_dose_schedule">
+        <action
+            android:id="@+id/navigate_to_dose__schedule_details"
+            app:destination="@id/dose_schedule_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/dose_schedule_details"
+        android:name="com.example.allergytracker.ui.DoseScheduleDetailsFragment"
+        android:label="@string/label_dose_schedule_details">
+        <argument
+            android:name="foodDose"
+            app:argType="com.example.allergytracker.data.doseschedule.FoodDose"
+            app:nullable="true" />
+        <action
+            android:id="@+id/navigate_to_dose_schedule"
+            app:destination="@id/dose_schedule" />
+    </fragment>
 
 </navigation>

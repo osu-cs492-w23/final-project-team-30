@@ -14,7 +14,7 @@ class AllergenAdapter(private val onClick: (FoodResult) -> Unit) : RecyclerView.
     override fun getItemCount(): Int = results.size
 
     fun updateResults(newResults: List<FoodResult>) {
-        results = newResults ?: listOf()
+        results = newResults
         notifyDataSetChanged()
     }
 
