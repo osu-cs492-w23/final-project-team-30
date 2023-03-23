@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -25,6 +26,7 @@ import com.example.allergytracker.data.doseschedule.FoodDose
 import com.example.allergytracker.data.doseschedule.FoodDoseSchedule
 import com.example.allergytracker.data.doseschedule.FoodDoseViewModel
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
@@ -40,6 +42,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
 
     private var viewMode = DoseScheduleMode.View
 
+    private lateinit var coordinatorLayout: CoordinatorLayout
     private lateinit var foodDoseName: EditText
     private lateinit var addDoseBtn: Button
     private lateinit var foodDoseScheduleRV: RecyclerView
@@ -60,6 +63,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         foodDoseScheduleRV.setHasFixedSize(true)
         foodDoseScheduleRV.adapter = scheduleAdapter
 
+        coordinatorLayout = view.findViewById(R.id.coordinator_layout)
         foodDoseName = view.findViewById(R.id.dose_schedule_name)
         addDoseBtn = view.findViewById(R.id.btn_add_dose)
         doseEntryDate = view.findViewById(R.id.dose_start_cal)
@@ -69,7 +73,6 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
 
         val loadingSymbol: CircularProgressIndicator = view.findViewById(R.id.loading_indicator)
         viewModel.loading.observe(viewLifecycleOwner) {
-            Log.d("Main", "Loading: $it")
             when (it) {
                 true -> {
                     loadingSymbol.visibility = View.VISIBLE
@@ -191,10 +194,6 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
                 saveSchedule()
                 changeViewMode(DoseScheduleMode.View)
                 displayFoodDoseData()
-                Log.d("Main", "Saved")
-            }
-            else {
-                Log.d("Main", "Failed")
             }
             true
         }
@@ -248,7 +247,6 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         foodDoseSchedule.clear()
         foodDoseSchedule.addAll(scheduleAdapter.scheduleItems)
 
-        Log.d("Main", "End schedule save")
         currDoseEdit = null
 
         return true
@@ -257,7 +255,11 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
     private fun isValidSchedule(schedule: List<FoodDoseSchedule>) : Boolean {
         for (i in 1 until schedule.size) {
             if (schedule[i].amount == "" || schedule[i].frequency == "") {
-                Log.d("Main", "Missing details")
+                Snackbar.make(
+                    coordinatorLayout,
+                    "Save failed: Dosage entries missing details",
+                    Snackbar.LENGTH_LONG
+                ).show()
                 return false
             }
 
@@ -272,7 +274,11 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
             d2.set(Calendar.DAY_OF_MONTH, schedule[i-1].startDay)
 
             if (!d.after(d2)) {
-                Log.d("Main", "Dates not ordered")
+                Snackbar.make(
+                    coordinatorLayout,
+                    "Save failed: Dates out of order",
+                    Snackbar.LENGTH_LONG
+                ).show()
                 return false
             }
         }
