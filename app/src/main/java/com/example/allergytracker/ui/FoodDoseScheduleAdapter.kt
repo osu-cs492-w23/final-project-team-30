@@ -1,5 +1,6 @@
 package com.example.allergytracker.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,16 +15,25 @@ class FoodDoseScheduleAdapter(private val onClick: (FoodDoseSchedule) -> Unit) :
     override fun getItemCount(): Int = scheduleItems.size
 
     fun setDoseScheduleItems(newItems: MutableList<FoodDoseSchedule>) {
+        Log.d("Main", "Setting RV to ${newItems.size}, currently has ${scheduleItems.size}")
         scheduleItems.clear()
         scheduleItems.addAll(newItems)
+        Log.d("Main", "RV now has ${scheduleItems.size}")
         notifyDataSetChanged()
     }
 
-    fun addDoseScheduleItem(newItem: FoodDoseSchedule) : Int {
+    fun addDoseScheduleItem(newItem: FoodDoseSchedule) {
+        Log.d("Main", "RV has ${scheduleItems.size}, adding 1")
         scheduleItems.add(newItem)
+        Log.d("Main", "RV now has ${scheduleItems.size}")
         notifyDataSetChanged()
+    }
 
-        return scheduleItems.size - 1
+    fun remDoseScheduleItem(item: FoodDoseSchedule) {
+        Log.d("Main", "RV has ${scheduleItems.size}, removing 1")
+        scheduleItems.remove(item)
+        Log.d("Main", "RV now has ${scheduleItems.size}")
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DoseScheduleViewHolder {

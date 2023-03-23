@@ -80,4 +80,15 @@
         android:hint="@string/hint_dose_freq"
         android:visibility="invisible" />
 
+    <Button
+        android:id="@+id/btn_rem_dose_schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toRightOf="@id/dose_start_cal"
+        app:layout_constraintTop_toBottomOf="@id/et_dose_freq"
+        android:hint="@string/label_delete_dose_schedule_entry"
+        android:visibility="invisible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

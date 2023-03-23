@@ -42,6 +42,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
     private lateinit var doseEntryDate: DatePicker
     private lateinit var doseEntryAmount: EditText
     private lateinit var doseEntryFreq: EditText
+    private lateinit var remDoseBtn: Button
 
     private var currDoseEdit: FoodDoseSchedule? = null
 
@@ -59,6 +60,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         doseEntryDate = view.findViewById(R.id.dose_start_cal)
         doseEntryAmount = view.findViewById(R.id.et_dose_amount)
         doseEntryFreq = view.findViewById(R.id.et_dose_freq)
+        remDoseBtn = view.findViewById(R.id.btn_rem_dose_schedule)
 
         val loadingSymbol: CircularProgressIndicator = view.findViewById(R.id.loading_indicator)
         viewModel.loading.observe(viewLifecycleOwner) {
@@ -81,8 +83,11 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
             viewModel.loadFoodDoseSchedules(foodDose!!.id)
 
             viewModel.loadFoodDoseSchedules(foodDose!!.id).observe(viewLifecycleOwner) {
-                foodDoseSchedule.addAll(it ?: listOf())
-                displayFoodDoseData()
+                // This might cause issues, but only load data if there is no preexisting data
+                if (foodDoseSchedule.size == 0) {
+                    foodDoseSchedule.addAll(it ?: listOf())
+                    displayFoodDoseData()
+                }
             }
         }
 
@@ -135,6 +140,12 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
+        remDoseBtn.setOnClickListener {
+            if (currDoseEdit != null) {
+                scheduleAdapter.remDoseScheduleItem(currDoseEdit!!)
+                currDoseEdit = null
+            }
+        }
     }
 
     private fun displayFoodDoseData() {
@@ -164,8 +175,10 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
             true
         }
         R.id.action_delete_schedule -> {
-            if (foodDose != null)
+            if (foodDose != null) {
                 viewModel.remFoodDose(foodDose!!)
+                viewModel.remFoodDoseSchedules(viewLifecycleOwner, foodDose!!.id)
+            }
             val directions = DoseScheduleDetailsFragmentDirections.navigateToDoseSchedule()
             findNavController().navigate(directions)
             true
@@ -173,6 +186,9 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         R.id.action_save_schedule -> {
             changeViewMode(DoseScheduleMode.View)
             saveSchedule()
+            Log.d("Main", "Begin display foodDoseData()")
+            displayFoodDoseData()
+            Log.d("Main", "End display foodDoseData()")
             true
         }
         R.id.action_cancel_edit_schedule -> {
@@ -195,6 +211,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         doseEntryDate.visibility = if (canEdit) View.VISIBLE else View.INVISIBLE
         doseEntryAmount.visibility = if (canEdit) View.VISIBLE else View.INVISIBLE
         doseEntryFreq.visibility = if (canEdit) View.VISIBLE else View.INVISIBLE
+        remDoseBtn.visibility = if (canEdit) View.VISIBLE else View.INVISIBLE
 
         currDoseEdit = null
     }
@@ -210,15 +227,25 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         )
         viewModel.addFoodDose(foodDose!!)
 
-        foodDoseSchedule = mutableListOf()
-        foodDoseSchedule.addAll(scheduleAdapter.scheduleItems)
-        for (dose in foodDoseSchedule) {
+        Log.d("Main", "Begin schedule save")
+        val tempSchedule = mutableListOf<FoodDoseSchedule>()
+        tempSchedule.addAll(scheduleAdapter.scheduleItems)
+        for (dose in tempSchedule) {
             dose.foodId = foodDose!!.id
-            Log.d("Main", "${dose.foodId} ${dose.startDay} ${dose.startMonth} ${dose.startYear}")
             viewModel.addFoodDoseSchedule(dose)
+
+            foodDoseSchedule.removeIf { it.id == dose.id }
         }
 
+        for (dose in foodDoseSchedule)
+            viewModel.remFoodDoseSchedule(dose)
+
+        foodDoseSchedule.clear()
+        foodDoseSchedule.addAll(scheduleAdapter.scheduleItems)
+
+        Log.d("Main", "End schedule save")
         currDoseEdit = null
+
     }
 
     private fun onDoseScheduleClick(foodDoseSchedule: FoodDoseSchedule) {
