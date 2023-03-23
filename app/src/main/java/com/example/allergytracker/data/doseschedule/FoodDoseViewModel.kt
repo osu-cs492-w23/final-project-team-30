@@ -15,12 +15,6 @@ import kotlinx.coroutines.launch
 class FoodDoseViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = FoodDoseRepository(AppDatabase.getInstance(application).foodDoseDao())
 
-    private val _loading = MutableLiveData(false)
-    val loading: LiveData<Boolean> = _loading
-
-    private val _foodDoseSchedules = MutableLiveData<List<FoodDoseSchedule>?>(null)
-    val foodDoseSchedules: LiveData<List<FoodDoseSchedule>?> = _foodDoseSchedules
-
     fun addFoodDose(foodDose: FoodDose) {
         viewModelScope.launch {
             repository.insertFoodDose(foodDose)
@@ -44,6 +38,8 @@ class FoodDoseViewModel(application: Application) : AndroidViewModel(application
             repository.deleteFoodDoseSchedule(foodDoseSchedule)
         }
     }
+
+    val allFoodDoseSchedules = repository.getAllFoodDoseSchedules().asLiveData()
 
     fun loadFoodDoseSchedules(foodId: Long) = repository.getFoodDoseSchedules(foodId).asLiveData()
 

@@ -20,4 +20,7 @@ interface FoodDoseDao {
 
     @Query("SELECT * FROM FoodDoseSchedule WHERE foodId = :foodId")
     fun getFoodDoseSchedules(foodId: Long) : Flow<List<FoodDoseSchedule>>
+
+    @Query("SELECT * FROM FoodDoseSchedule")
+    fun getAllFoodDoseSchedules() : Flow<List<FoodDoseSchedule>>
 }

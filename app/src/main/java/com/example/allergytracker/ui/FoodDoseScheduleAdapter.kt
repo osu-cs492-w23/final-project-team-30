@@ -11,7 +11,7 @@ import com.example.allergytracker.R
 import com.example.allergytracker.data.doseschedule.FoodDoseSchedule
 import kotlinx.coroutines.currentCoroutineContext
 
-class FoodDoseScheduleAdapter(private val onClick: (FoodDoseSchedule, LinearLayout?) -> Unit) : RecyclerView.Adapter<FoodDoseScheduleAdapter.DoseScheduleViewHolder>() {
+class FoodDoseScheduleAdapter(private val onClick: ((FoodDoseSchedule, LinearLayout?) -> Unit)?) : RecyclerView.Adapter<FoodDoseScheduleAdapter.DoseScheduleViewHolder>() {
     var scheduleItems: MutableList<FoodDoseSchedule> = mutableListOf()
 
     override fun getItemCount(): Int = scheduleItems.size
@@ -43,7 +43,7 @@ class FoodDoseScheduleAdapter(private val onClick: (FoodDoseSchedule, LinearLayo
         holder.bind(scheduleItems[position])
     }
 
-    class DoseScheduleViewHolder(view: View, val onClick: (FoodDoseSchedule, LinearLayout?) -> Unit) : RecyclerView.ViewHolder(view) {
+    class DoseScheduleViewHolder(view: View, val onClick: ((FoodDoseSchedule, LinearLayout?) -> Unit)?) : RecyclerView.ViewHolder(view) {
         private var currDose: FoodDoseSchedule? = null
 
         private val layout: LinearLayout = view.findViewById(R.id.dose_schedule_list_item)
@@ -54,7 +54,7 @@ class FoodDoseScheduleAdapter(private val onClick: (FoodDoseSchedule, LinearLayo
         init {
             view.setOnClickListener {
                 if (currDose != null)
-                    onClick(currDose!!, null)
+                    onClick?.invoke(currDose!!, null)
             }
         }
 

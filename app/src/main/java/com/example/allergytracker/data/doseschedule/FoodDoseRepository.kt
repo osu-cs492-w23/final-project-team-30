@@ -12,4 +12,5 @@ class FoodDoseRepository(
     suspend fun deleteFoodDoseSchedule(schedule: FoodDoseSchedule) = dao.deleteDoseSchedule(schedule)
 
     fun getFoodDoseSchedules(foodId: Long) = dao.getFoodDoseSchedules(foodId)
+    fun getAllFoodDoseSchedules() = dao.getAllFoodDoseSchedules()
 }

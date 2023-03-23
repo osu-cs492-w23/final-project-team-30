@@ -72,7 +72,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         remDoseBtn = view.findViewById(R.id.btn_rem_dose_schedule)
 
         val loadingSymbol: CircularProgressIndicator = view.findViewById(R.id.loading_indicator)
-        viewModel.loading.observe(viewLifecycleOwner) {
+        /*viewModel.loading.observe(viewLifecycleOwner) {
             when (it) {
                 true -> {
                     loadingSymbol.visibility = View.VISIBLE
@@ -81,7 +81,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
                     loadingSymbol.visibility = View.INVISIBLE
                 }
             }
-        }
+        }*/
 
         if (args.foodDose == null) {
             changeViewMode(DoseScheduleMode.Edit)
