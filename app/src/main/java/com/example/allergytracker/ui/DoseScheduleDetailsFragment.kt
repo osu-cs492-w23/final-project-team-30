@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -45,6 +46,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
     private lateinit var remDoseBtn: Button
 
     private var currDoseEdit: FoodDoseSchedule? = null
+    private var currDoseEditBkgd: LinearLayout? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -248,8 +250,15 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
 
     }
 
-    private fun onDoseScheduleClick(foodDoseSchedule: FoodDoseSchedule) {
+    private fun onDoseScheduleClick(foodDoseSchedule: FoodDoseSchedule, bkgd: LinearLayout? = null) {
+        if (currDoseEditBkgd != null)
+            currDoseEditBkgd!!.background = null
         currDoseEdit = foodDoseSchedule
+        if (bkgd != null) {
+            currDoseEditBkgd = bkgd
+            bkgd.setBackgroundColor(resources.getColor(R.color.teal_200))
+        } else
+            currDoseEditBkgd = null
 
         doseEntryDate.updateDate(
             foodDoseSchedule.startYear,
