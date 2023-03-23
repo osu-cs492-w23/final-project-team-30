@@ -26,6 +26,9 @@ import com.example.allergytracker.data.doseschedule.FoodDoseSchedule
 import com.example.allergytracker.data.doseschedule.FoodDoseViewModel
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import java.time.LocalDate
+import java.util.Calendar
+import java.util.Date
+import java.util.function.BinaryOperator
 
 class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_fragment) {
     private val args: DoseScheduleDetailsFragmentArgs by navArgs()
@@ -160,7 +163,6 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.dose_schedule_details_bar, menu)
     }
-
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
 
@@ -170,7 +172,6 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         menu.findItem(R.id.action_edit_schedule).isVisible = viewMode == DoseScheduleMode.View
         menu.findItem(R.id.action_delete_schedule).isVisible = viewMode == DoseScheduleMode.View
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when(item.itemId) {
         R.id.action_edit_schedule -> {
             changeViewMode(DoseScheduleMode.Edit)
@@ -186,11 +187,15 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
             true
         }
         R.id.action_save_schedule -> {
-            changeViewMode(DoseScheduleMode.View)
-            saveSchedule()
-            Log.d("Main", "Begin display foodDoseData()")
-            displayFoodDoseData()
-            Log.d("Main", "End display foodDoseData()")
+            if (isValidSchedule(scheduleAdapter.scheduleItems)) {
+                saveSchedule()
+                changeViewMode(DoseScheduleMode.View)
+                displayFoodDoseData()
+                Log.d("Main", "Saved")
+            }
+            else {
+                Log.d("Main", "Failed")
+            }
             true
         }
         R.id.action_cancel_edit_schedule -> {
@@ -206,7 +211,6 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         requireActivity().invalidateOptionsMenu()
         setEditableViews(newMode == DoseScheduleMode.Edit)
     }
-
     private fun setEditableViews(canEdit: Boolean) {
         foodDoseName.isFocusableInTouchMode = canEdit
         addDoseBtn.visibility = if (canEdit) View.VISIBLE else View.INVISIBLE
@@ -218,7 +222,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         currDoseEdit = null
     }
 
-    private fun saveSchedule() {
+    private fun saveSchedule() : Boolean {
         if (foodDose != null)
             viewModel.remFoodDose(foodDose!!)
 
@@ -229,7 +233,6 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         )
         viewModel.addFoodDose(foodDose!!)
 
-        Log.d("Main", "Begin schedule save")
         val tempSchedule = mutableListOf<FoodDoseSchedule>()
         tempSchedule.addAll(scheduleAdapter.scheduleItems)
         for (dose in tempSchedule) {
@@ -248,6 +251,32 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         Log.d("Main", "End schedule save")
         currDoseEdit = null
 
+        return true
+    }
+
+    private fun isValidSchedule(schedule: List<FoodDoseSchedule>) : Boolean {
+        for (i in 1 until schedule.size) {
+            if (schedule[i].amount == "" || schedule[i].frequency == "") {
+                Log.d("Main", "Missing details")
+                return false
+            }
+
+            val d = Calendar.getInstance()
+            d.set(Calendar.YEAR, schedule[i].startYear)
+            d.set(Calendar.MONTH, schedule[i].startMonth)
+            d.set(Calendar.DAY_OF_MONTH, schedule[i].startDay)
+
+            val d2 = Calendar.getInstance()
+            d2.set(Calendar.YEAR, schedule[i-1].startYear)
+            d2.set(Calendar.MONTH, schedule[i-1].startMonth)
+            d2.set(Calendar.DAY_OF_MONTH, schedule[i-1].startDay)
+
+            if (!d.after(d2)) {
+                Log.d("Main", "Dates not ordered")
+                return false
+            }
+        }
+        return true
     }
 
     private fun onDoseScheduleClick(foodDoseSchedule: FoodDoseSchedule, bkgd: LinearLayout? = null) {
