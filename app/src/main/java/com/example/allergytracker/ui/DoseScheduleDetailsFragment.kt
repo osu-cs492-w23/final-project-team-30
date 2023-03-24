@@ -190,7 +190,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
             true
         }
         R.id.action_save_schedule -> {
-            if (isValidSchedule(scheduleAdapter.scheduleItems)) {
+            if (isValidDose(getInputFoodDose()) && isValidSchedule(scheduleAdapter.scheduleItems)) {
                 saveSchedule()
                 changeViewMode(DoseScheduleMode.View)
                 displayFoodDoseData()
@@ -221,15 +221,19 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         currDoseEdit = null
     }
 
-    private fun saveSchedule() : Boolean {
-        if (foodDose != null)
-            viewModel.remFoodDose(foodDose!!)
-
-        foodDose = FoodDose(
+    private fun getInputFoodDose() : FoodDose {
+        return FoodDose(
             if (foodDose != null) foodDose!!.id else System.currentTimeMillis(),
             foodDoseName.text.toString(),
             true
         )
+    }
+
+    private fun saveSchedule() : Boolean {
+        if (foodDose != null)
+            viewModel.remFoodDose(foodDose!!)
+
+        foodDose = getInputFoodDose()
         viewModel.addFoodDose(foodDose!!)
 
         val tempSchedule = mutableListOf<FoodDoseSchedule>()
@@ -250,6 +254,16 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
         currDoseEdit = null
 
         return true
+    }
+
+    private fun isValidDose(dose: FoodDose) : Boolean {
+        if (dose.name == "")
+            Snackbar.make(
+                coordinatorLayout,
+                "Save failed: Enter a name for the new dose",
+                Snackbar.LENGTH_LONG
+            ).show()
+        return dose.name != ""
     }
 
     private fun isValidSchedule(schedule: List<FoodDoseSchedule>) : Boolean {
