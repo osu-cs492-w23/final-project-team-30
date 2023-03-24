@@ -103,7 +103,7 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
             d.set(Calendar.MONTH, it.startMonth)
             d.set(Calendar.DAY_OF_MONTH, it.startDay)*/
 
-            if (y == it.startYear && m + 1 == it.startMonth && d == it.startDay)
+            if (y == it.startYear && m == it.startMonth && d == it.startDay)
                 foodDoses?.forEach { fd ->
                     if (fd.id == it.foodId)
                         scheduleAdapter.addItem(fd, it)

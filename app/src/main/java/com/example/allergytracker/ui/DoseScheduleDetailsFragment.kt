@@ -105,7 +105,7 @@ class DoseScheduleDetailsFragment : Fragment(R.layout.dose_schedule_details_frag
                 0,
                 0,
                 current.dayOfMonth,
-                current.monthValue,
+                current.monthValue-1,
                 current.year,
                 "",
                 Measurement.milligram,

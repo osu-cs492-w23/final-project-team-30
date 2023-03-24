@@ -61,7 +61,7 @@ class FoodDoseScheduleAdapter(private val onClick: ((FoodDoseSchedule, LinearLay
         fun bind(dose: FoodDoseSchedule) {
             currDose = dose
 
-            startDateText.text = "${dose.startMonth}/${dose.startDay}/${dose.startYear}"
+            startDateText.text = "${dose.startMonth+1}/${dose.startDay}/${dose.startYear}"
             doseAmountText.text = dose.amount + dose.unit.toString()
             doseFreqText.text = dose.frequency
         }
