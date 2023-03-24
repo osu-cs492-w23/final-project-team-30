@@ -19,7 +19,7 @@ import java.util.Date
 
 class CalendarFragment : Fragment(R.layout.calendar_fragment) {
     private val viewModel: FoodDoseViewModel by viewModels()
-    private val scheduleAdapter = FoodDoseScheduleAdapter(null)
+    private val scheduleAdapter = CalendarAdapter()
 
     private lateinit var calendar: CalendarView
     private lateinit var loadingIndicator: CircularProgressIndicator
@@ -95,7 +95,7 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
 
         Log.d("Main", "$m/$d/$y")
 
-        scheduleAdapter.setDoseScheduleItems(mutableListOf())
+        scheduleAdapter.clearItems()
 
         foodDoseSchedules?.forEach {
             /*val d = Calendar.getInstance()
@@ -104,7 +104,10 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
             d.set(Calendar.DAY_OF_MONTH, it.startDay)*/
 
             if (y == it.startYear && m + 1 == it.startMonth && d == it.startDay)
-                scheduleAdapter.addDoseScheduleItem(it)
+                foodDoses?.forEach { fd ->
+                    if (fd.id == it.foodId)
+                        scheduleAdapter.addItem(fd, it)
+                }
         }
     }
 }
